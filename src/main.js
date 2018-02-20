@@ -1,5 +1,6 @@
 import data from './data';
 import paper from 'paper';
+import makeCircle from './vendor/smallest-enclosing-circle';
 
 var canvas = document.getElementById('canvas');
 var ctx = canvas.getContext('2d');
@@ -48,7 +49,9 @@ let labels = points.map((point, index) => ({
   pos: point
 }));
 
+data.members.forEach((m, index) => m.label = labels[index]);
 
+// Create member labels
 labels.forEach((label) => {
   new paper.PointText({
     point: label.pos,
@@ -64,5 +67,17 @@ labels.forEach((label) => {
   ctx.stroke();
 });
 
-// Draw the view now:
+// Circle around labels
+
+data.groups.forEach(g => {
+  // add members that belong to the group
+  g.members = data.members.filter(m => m.groupIds.some(id => id === g.id));
+});
+
+data.groups.forEach(g => {
+  const circle = makeCircle(g.members.map(m => m.label.pos));
+  const shape = new paper.Shape.Circle(new paper.Point(circle.x, circle.y), circle.r);
+  shape.strokeColor = 'black';
+});
+
 paper.view.draw();
