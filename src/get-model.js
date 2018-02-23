@@ -35,7 +35,13 @@ function getDistributedPoints(n, alpha) {
 function getModel(data) {
   const model = {
     labels: [],
-    circles: []
+    circles: [],
+    getCopy() {
+      return {
+        labels: this.labels.map(l => Object.assign({}, l)),
+        circles: this.circles.map(c => Object.assign({}, c))
+      }
+    }
   };
   const points = getDistributedPoints(data.members.length, 0);
   model.labels = points.map((point, index) => Object.assign({pos: point}, data.members[index]));
@@ -45,6 +51,7 @@ function getModel(data) {
     circle.labels = model.labels.filter(label => label.groupIds.some(id => id === g.id));
     // assign x, y and r
     Object.assign(circle, makeCircle(circle.labels.map(l => l.pos)));
+    circle.r += 5; // give some "padding" to the circle
     return circle;
   });
   return model;
