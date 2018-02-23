@@ -7,14 +7,14 @@ function drawModel(canvas, model) {
   ctx.strokeStyle = 'blue';
   model.labels.forEach(label => {
     new paper.PointText({
-      point: label.pos,
+      point: {x: label.x, y: label.y},
       content: label.name,
       fillColor: 'black',
       fontFamily: 'Courier New',
       fontWeight: 'bold',
       fontSize: 25
     });
-    ctx.arc(label.pos.x, label.pos.y, 3, 0, Math.PI * 2);
+    ctx.arc(label.x, label.y, 3, 0, Math.PI * 2);
   });
   ctx.stroke();
 

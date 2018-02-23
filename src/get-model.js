@@ -37,23 +37,26 @@ function getModel(data) {
     labels: [],
     circles: [],
     getCopy() {
-      return {
+      return Object.assign({}, this, {
         labels: this.labels.map(l => Object.assign({}, l)),
         circles: this.circles.map(c => Object.assign({}, c))
-      }
+      });
+    },
+    updateCircles() {
+      this.circles = data.groups.map(g => {
+        const circle = Object.assign({}, g);
+        // add members that belong to the group
+        circle.labels = this.labels.filter(label => label.groupIds.some(id => id === g.id));
+        // assign x, y and r
+        Object.assign(circle, makeCircle(circle.labels));
+        circle.r += 5; // give some "padding" to the circle
+        return circle;
+      });
     }
   };
   const points = getDistributedPoints(data.members.length, 0);
-  model.labels = points.map((point, index) => Object.assign({pos: point}, data.members[index]));
-  model.circles = data.groups.map(g => {
-    const circle = Object.assign({}, g);
-    // add members that belong to the group
-    circle.labels = model.labels.filter(label => label.groupIds.some(id => id === g.id));
-    // assign x, y and r
-    Object.assign(circle, makeCircle(circle.labels.map(l => l.pos)));
-    circle.r += 5; // give some "padding" to the circle
-    return circle;
-  });
+  model.labels = points.map((point, index) => Object.assign({}, point, data.members[index]));
+  model.updateCircles();
   return model;
 }
 
