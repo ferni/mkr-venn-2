@@ -15,10 +15,9 @@ function validateData(data) {
   }
 
   data.members.forEach((m) => {
-    /*
     if (m.groupIds.length > 3) {
       throw 'Invalid data: A member cannot belong to more than three groups.';
-    }*/
+    }
     const firstGroup = getGroup(m.groupIds[0]);
     m.groupIds.forEach((groupId) => {
       let group = getGroup(groupId);
@@ -32,6 +31,11 @@ function validateData(data) {
           `'${group.parent}' as parent.`;
       }
     });
+
+    // Check name uniqueness
+    if (data.members.some(member => member !== m && member.name === m.name)) {
+      throw 'Invalid data: The name "' + m.name + '" is duplicated among members';
+    }
   });
 }
 
