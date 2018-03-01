@@ -85,6 +85,10 @@ const data = {
     {
       name: 'H',
       groupIds: ['1', '5']
+    },
+    {
+      name: 'Someone',
+      groupIds: ['1']
     }
   ]
 };

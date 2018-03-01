@@ -10,6 +10,42 @@ function point(x, y) {
   return {x, y};
 }
 
+function allEqual(arr1, arr2) {
+  if (arr1.length !== arr2.length) {
+    return false;
+  }
+  for (let i = 0; i < arr1.length; i++) {
+    if (arr1[i] !== arr2[i]) {
+      return false;
+    }
+  }
+  return true;
+}
+
+function haveSameGroups(members) {
+  return members
+    .map(m => m.groupIds)
+    .reduce((acc, current) => {
+      if (!acc) {
+        return false;
+      }
+      if (allEqual(acc, current)) {
+        return current;
+      }
+      return false;
+    });
+}
+
+function label(point, members) {
+  if (!haveSameGroups(members)) {
+    throw 'All members in the label must have identical group ids';
+  }
+  return Object.assign({
+    members,
+    groupIds: members[0].groupIds
+  }, point);
+}
+
 // Sunflower script adapted from https://stackoverflow.com/a/28572551
 function getDistributedPoints(n, alpha) {
   const RAD = 250;
@@ -32,7 +68,7 @@ function getDistributedPoints(n, alpha) {
   return points;
 }
 
-function getModel(data) {
+function getModel({ groups, members }) {
   const model = {
     labels: [],
     circles: [],
@@ -43,7 +79,7 @@ function getModel(data) {
       });
     },
     updateCircles() {
-      this.circles = data.groups.map(g => {
+      this.circles = groups.map(g => {
         const circle = Object.assign({}, g);
         // add members that belong to the group
         circle.labels = this.labels.filter(label => label.groupIds.some(id => id === g.id));
@@ -54,8 +90,18 @@ function getModel(data) {
       });
     }
   };
-  const points = getDistributedPoints(data.members.length, 0);
-  model.labels = points.map((point, index) => Object.assign({}, point, data.members[index]));
+  let labels = [];
+  members.forEach(member => {
+    let sameRolesLabel = labels.find(label => allEqual(label.groupIds, member.groupIds));
+    if (sameRolesLabel) {
+      sameRolesLabel.members.push(member);
+    } else {
+      labels.push(label({}, [member]));
+    }
+  });
+
+  const points = getDistributedPoints(labels.length, 0);
+  model.labels = points.map((point, index) => Object.assign(labels[index], point));
   model.updateCircles();
   return model;
 }

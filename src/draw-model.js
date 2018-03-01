@@ -8,7 +8,7 @@ function drawModel(canvas, model) {
   model.labels.forEach(label => {
     new paper.PointText({
       point: {x: label.x, y: label.y},
-      content: label.name,
+      content: label.members.map(m => m.name).join(','),
       fillColor: 'black',
       fontFamily: 'Courier New',
       fontWeight: 'bold',
