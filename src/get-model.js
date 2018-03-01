@@ -5,6 +5,7 @@ Creates a model of labels and circles from the data.
  */
 
 import makeCircle from "./vendor/smallest-enclosing-circle";
+import paper from 'paper';
 
 function point(x, y) {
   return {x, y};
@@ -40,10 +41,34 @@ function label(point, members) {
   if (!haveSameGroups(members)) {
     throw 'All members in the label must have identical group ids';
   }
-  return Object.assign({
+  return {
     members,
-    groupIds: members[0].groupIds
-  }, point);
+    groupIds: members[0].groupIds,
+    x: point.x,
+    y: point.y,
+    // sets property "paperItem", which is what would be drawn with paper.js
+    updatePaperItem() {
+      if (!this.paperItem) {
+        this.paperItem = new paper.PointText({
+          content: this.members.map(m => m.name).join(','),
+          fillColor: 'black',
+          fontFamily: 'Courier New',
+          fontWeight: 'bold',
+          fontSize: 25
+        });
+      }
+      this.paperItem.point = {x: this.x, y: this.y};
+    },
+    getVertices() {
+      const rect = this.paperItem.bounds;
+      return [rect.topLeft, rect.topRight, rect.bottomLeft, rect.bottomRight];
+    },
+    getCopy() {
+      const copy = Object.assign({}, this, {paperItem: null});
+      copy.updatePaperItem();
+      return copy;
+    }
+  };
 }
 
 // Sunflower script adapted from https://stackoverflow.com/a/28572551
@@ -74,17 +99,21 @@ function getModel({ groups, members }) {
     circles: [],
     getCopy() {
       return Object.assign({}, this, {
-        labels: this.labels.map(l => Object.assign({}, l)),
+        labels: this.labels.map(l => l.getCopy()),
         circles: this.circles.map(c => Object.assign({}, c))
       });
     },
     updateCircles() {
-      this.circles = groups.map(g => {
-        const circle = Object.assign({}, g);
+      model.labels.forEach(label => label.updatePaperItem());
+      this.circles = groups.map(group => {
+        const circle = Object.assign({}, group);
         // add members that belong to the group
-        circle.labels = this.labels.filter(label => label.groupIds.some(id => id === g.id));
+        circle.labels = this.labels.filter(label => label.groupIds.some(id => id === group.id));
         // assign x, y and r
-        Object.assign(circle, makeCircle(circle.labels));
+        const pointsInsideCircle = circle.labels
+          .map(l => l.getVertices())
+          .reduce((acc, current) => acc.concat(current));
+        Object.assign(circle, makeCircle(pointsInsideCircle));
         circle.r += 5; // give some "padding" to the circle
         return circle;
       });

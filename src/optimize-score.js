@@ -24,7 +24,7 @@ function swapPositions(model, indexA, indexB) {
 }
 
 function optimizeScore(data, model) {
-  const posCombinations = getFactorial(data.members.length);
+  const posCombinations = getFactorial(model.labels.length);
   console.log('Number of position permutations are '+ posCombinations);
 
   let maxScore = getScore(data, model);
