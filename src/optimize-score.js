@@ -23,7 +23,7 @@ function swapPositions(model, indexA, indexB) {
   Object.assign(model.labels[indexB], auxPos);
 }
 
-function optimizeScore(data, model) {
+function optimizeScore(data, model, draw) {
   const posCombinations = getFactorial(model.labels.length);
   console.log('Number of position permutations are '+ posCombinations);
 
@@ -38,17 +38,22 @@ function optimizeScore(data, model) {
     if (len === 1) {
       return;
     } else {
-      for (i; i < l; i++) {
+      function process() {
         permutations(l, mod);
         l % 2 ? swapPositions(mod, i, l) : swapPositions(mod, 0, l); // even-odd check for alternating swaps
         variations++;
         mod.updateCircles();
         let score = getScore(data, mod);
+        if (draw) draw(mod);
         if (score > maxScore) {
           maxScore = score;
           modelWithBestScore = mod;
         }
+        if (i < l)
+          setTimeout(process, 0);
+        i++
       }
+      process();
       permutations(l, mod);
     }
   }
