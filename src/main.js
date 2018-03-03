@@ -8,7 +8,6 @@ import paper from "paper";
 validateData(data);
 const canvas = document.getElementById('canvas');
 paper.setup(canvas);
-window.paper = paper;
 
 // Activate a temp draw layer only for processing
 const tempLayer = new paper.Layer();
@@ -37,3 +36,4 @@ function draw(model) {
   paper.view.draw();
 }
 draw(model);
+window.model = model

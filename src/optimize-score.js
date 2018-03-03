@@ -50,7 +50,7 @@ function optimizeScore(data, model, draw) {
           modelWithBestScore = mod;
         }
         if (i < l)
-          setTimeout(process, 1)
+          setTimeout(process, 0);
         i++
       }
       process();
