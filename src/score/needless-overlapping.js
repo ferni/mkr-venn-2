@@ -1,4 +1,4 @@
-import { circlesOverlap } from '../geometry';
+import { circlesOverlap, getDistance } from '../geometry';
 
 function getOverlappingScore(data, model) {
   let score = 0;
@@ -8,7 +8,7 @@ function getOverlappingScore(data, model) {
           circlesOverlap(circleA, circleB) &&
           !circleA.labels.some(l => circleB.labels.includes(l))
       ) {
-        score--;
+        score -= ((circleA.r + circleB.r) - getDistance(circleA, circleB));
       }
     }
   }

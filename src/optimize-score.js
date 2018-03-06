@@ -23,7 +23,7 @@ function swapPositions(model, indexA, indexB) {
   Object.assign(model.labels[indexB], auxPos);
 }
 
-function optimizeScore(data, model) {
+function findBestStartingPosition(data, model) {
   const posCombinations = getFactorial(model.labels.length);
   console.log('Number of position permutations are '+ posCombinations);
 
@@ -55,6 +55,53 @@ function optimizeScore(data, model) {
 
   permutations(model.labels.length, model);
   console.log('Max score is ' + maxScore + ' among ' + variations + ' variations.');
+  return modelWithBestScore;
+}
+
+
+function optimizeScore(data, model) {
+  model = findBestStartingPosition(data, model);
+
+  // try moving labels around
+  const dis = 2; // move distance
+  const movements = [
+    {x: dis, y: 0},
+    {x: dis, y: dis},
+    {x: 0, y: dis},
+    {x: -dis, y: dis},
+    {x: -dis, y: 0},
+    {x: -dis, y: -dis},
+    {x: 0, y: -dis},
+    {x: dis, y: -dis}
+  ];
+
+  function move(label, movement) {
+    label.x += movement.x;
+    label.y += movement.y;
+    label.updatePaperItem();
+    console.log('Move ' + label.paperItem.content + ' to ' + movement.x + ',' + movement.y);
+  }
+
+  let prevMaxScore;
+  let prevBestModel;
+  let maxScore = getScore(data, model);
+  let modelWithBestScore = model;
+  do {
+    prevMaxScore = maxScore;
+    prevBestModel = modelWithBestScore;
+    for (let i = model.labels.length - 1; i >= 0; i--) {
+      for (let m = movements.length - 1; m >= 0; m--) {
+        let mod = prevBestModel.getCopy();
+        move(mod.labels[i], movements[m]);
+        mod.updateCircles();
+        let score = getScore(data, mod);
+        if (score > maxScore) {
+          maxScore = score;
+          modelWithBestScore = mod;
+        }
+      }
+    }
+  } while(maxScore > prevMaxScore);
   return modelWithBestScore;
 }
 

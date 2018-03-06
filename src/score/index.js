@@ -9,4 +9,4 @@ function getScore(data, model) {
   return getCorrectnessScore(data, model) + getOverlappingScore(data, model);
 }
 
-export { getScore };
+export { getScore, getCorrectnessScore, getOverlappingScore };
