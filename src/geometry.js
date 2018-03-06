@@ -6,4 +6,8 @@ function circleContainsPoint(circle, point) {
   return getDistance(point, circle) <= circle.r;
 }
 
-export { getDistance, circleContainsPoint };
+function circlesOverlap(circleA, circleB) {
+  return getDistance(circleA, circleB) < circleA.r + circleB.r;
+}
+
+export { getDistance, circleContainsPoint, circlesOverlap };

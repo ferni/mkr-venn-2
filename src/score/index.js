@@ -3,14 +3,10 @@ Gives the chart a score. The higher score the better.
  */
 
 import getCorrectnessScore from './correctness';
+import getOverlappingScore from './needless-overlapping';
 
 function getScore(data, model) {
-  return getCorrectnessScore(data, model);
+  return getCorrectnessScore(data, model) + getOverlappingScore(data, model);
 }
 
-function getBestScore(data, models) {
-  // todo: optimize not giving a score multiple times to the same model
-  return models.reduce((max, cur) => Math.max(getScore(data, max), getScore(data, cur)));
-}
-
-export { getBestScore, getScore };
+export { getScore };

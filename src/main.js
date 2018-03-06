@@ -1,7 +1,7 @@
 import data from './data';
 import validateData from './validate-data';
 import getModel from './get-model';
-import { getScore, getBestScore } from "./score";
+import { getScore } from "./score";
 import optimizeScore from './optimize-score';
 import paper from "paper";
 
