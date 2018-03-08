@@ -13,7 +13,7 @@ function makeText(content){
     fillColor: 'black',
     fontFamily: 'Courier New',
     fontWeight: 'bold',
-    fontSize: 25
+    fontSize: 18
   });
 }
 
@@ -37,7 +37,7 @@ function draw(model) {
   });
   model.circles.forEach(circle => {
     const shape = new paper.Shape.Circle(new paper.Point(circle.x, circle.y), circle.r);
-    shape.strokeColor = 'black';
+    shape.strokeColor = circle.color || 'black';
   });
   paper.view.draw();
 }

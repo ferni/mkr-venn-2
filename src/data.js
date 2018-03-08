@@ -20,7 +20,8 @@ const data = {
   groups: [
     {
       id: '1',
-      name: 'One'
+      name: 'One',
+      color: 'teal'
     },
     {
       id: '2',
