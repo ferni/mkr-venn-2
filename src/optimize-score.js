@@ -78,8 +78,7 @@ function optimizeScore(data, model) {
   function move(label, movement) {
     label.x += movement.x;
     label.y += movement.y;
-    label.updatePaperItem();
-    console.log('Move ' + label.paperItem.content + ' to ' + movement.x + ',' + movement.y);
+    console.log('Move ' + label.getText() + ' to ' + movement.x + ',' + movement.y);
   }
 
   let prevMaxScore;
