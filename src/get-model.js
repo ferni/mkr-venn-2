@@ -52,6 +52,9 @@ function label(pos, members) {
     getVertices() {
       const rect = getPaperText(this.getText(), {x: this.x, y: this.y}).bounds;
       return [rect.topLeft, rect.topRight, rect.bottomLeft, rect.bottomRight];
+    },
+    getArea() {
+      return getPaperText(this.getText(), {x: this.x, y: this.y}).bounds.area;
     }
   };
 }

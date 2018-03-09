@@ -13,7 +13,7 @@ function makeText(content){
     fillColor: 'black',
     fontFamily: 'Courier New',
     fontWeight: 'bold',
-    fontSize: 18
+    fontSize: 20
   });
 }
 
@@ -38,10 +38,6 @@ function draw(model) {
   model.labels.forEach(label => {
     const text = makeText(label.getText());
     text.point = {x: label.x, y: label.y};
-    label.getVertices().forEach(v => {
-      const shape = new paper.Shape.Circle(new paper.Point(v.x, v.y), 1);
-      shape.strokeColor = 'red';
-    })
   });
   model.circles.forEach(circle => {
     const shape = new paper.Shape.Circle(new paper.Point(circle.x, circle.y), circle.r);

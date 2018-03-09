@@ -63,7 +63,7 @@ function optimizeScore(data, model) {
   model = findBestStartingPosition(data, model);
 
   // try moving labels around
-  const dis = 2; // move distance
+  const dis = 5; // move distance
   const movements = [
     {x: dis, y: 0},
     {x: dis, y: dis},
@@ -78,7 +78,7 @@ function optimizeScore(data, model) {
   function move(label, movement) {
     label.x += movement.x;
     label.y += movement.y;
-    console.log('Move ' + label.getText() + ' to ' + movement.x + ',' + movement.y);
+    //console.log('Move ' + label.getText() + ' to ' + movement.x + ',' + movement.y);
   }
 
   let prevMaxScore;
