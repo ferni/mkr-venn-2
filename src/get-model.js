@@ -5,7 +5,7 @@ Creates a model of labels and circles from the data.
  */
 
 import makeCircle from "./vendor/smallest-enclosing-circle";
-import { getTextDimensions } from "./drawing";
+import { getPaperText } from "./drawing";
 
 function point(x, y) {
   return {x, y};
@@ -47,16 +47,11 @@ function label(pos, members) {
     x: pos.x,
     y: pos.y,
     getText() {
-      return this.members.map(m => m.name).join(',');
+      return this.members.map(m => m.name).join('\n');
     },
     getVertices() {
-      const dimensions = getTextDimensions(this.getText());
-      return [
-        point(this.x, this.y - dimensions.height),
-        point(this.x + dimensions.width, this.y - dimensions.height),
-        point(this.x, this.y),
-        point(this.x + dimensions.width, this.y)
-      ];
+      const rect = getPaperText(this.getText(), {x: this.x, y: this.y}).bounds;
+      return [rect.topLeft, rect.topRight, rect.bottomLeft, rect.bottomRight];
     }
   };
 }
@@ -98,10 +93,10 @@ function getModel({ groups, members }) {
         const circle = Object.assign({}, group);
         // add members that belong to the group
         circle.labels = this.labels.filter(label => label.groupIds.some(id => id === group.id));
-        // assign x, y and r
         const pointsInsideCircle = circle.labels
           .map(l => l.getVertices())
           .reduce((acc, current) => acc.concat(current));
+        // assign x, y and r
         Object.assign(circle, makeCircle(pointsInsideCircle));
         circle.r += 5; // give some "padding" to the circle
         return circle;
