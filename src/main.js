@@ -1,7 +1,7 @@
 import data from './data';
 import validateData from './validate-data';
 import getModel from './get-model';
-import { getScore, getOverlappingScore } from "./score";
+import { getScore, getCorrectnessScore, getOverlappingScore, getAreasScore } from "./score";
 import optimizeScore from './optimize-score';
 import { draw } from './drawing';
 
@@ -18,12 +18,23 @@ data.groups.forEach(group => {
     })
   }
 });
-console.dir(data.members);
 let model = getModel(data);
+console.time('Score optimization');
 model = optimizeScore(data, model);
+console.timeEnd('Score optimization');
+console.time('Scoring');
 const score = getScore(data, model);
+console.timeEnd('Scoring');
+console.time('Correctness score');
+getCorrectnessScore(data, model);
+console.timeEnd('Correctness score');
+console.time('Overlapping score');
+getOverlappingScore(data, model);
+console.timeEnd('Overlapping score');
+console.time('Area score');
+getAreasScore(data, model);
+console.timeEnd('Area score');
 
 console.log('Final score is ' + score);
-console.log('Overlapping score: ' + getOverlappingScore(data, model));
 
 draw(model);

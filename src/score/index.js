@@ -18,4 +18,4 @@ function getScore(data, model) {
     (getAreasScore(data, model) * scoreWeight.areas);
 }
 
-export { getScore, getCorrectnessScore, getOverlappingScore };
+export { getScore, getCorrectnessScore, getOverlappingScore, getAreasScore};

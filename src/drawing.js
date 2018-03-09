@@ -7,7 +7,6 @@ paper.setup(canvas);
 const cachedPaperTexts = {};
 
 function makeText(content){
-  console.log('making text' + content);
   return new paper.PointText({
     content: content,
     fillColor: 'black',

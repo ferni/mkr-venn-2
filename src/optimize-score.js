@@ -25,7 +25,7 @@ function swapPositions(model, indexA, indexB) {
 
 function findBestStartingPosition(data, model) {
   const posCombinations = getFactorial(model.labels.length);
-  console.log('Number of position permutations are '+ posCombinations);
+  console.log('Number of initial position permutations are '+ posCombinations);
 
   let maxScore = getScore(data, model);
   let modelWithBestScore = model;
@@ -54,7 +54,6 @@ function findBestStartingPosition(data, model) {
   }
 
   permutations(model.labels.length, model);
-  console.log('Max score is ' + maxScore + ' among ' + variations + ' variations.');
   return modelWithBestScore;
 }
 
@@ -85,6 +84,7 @@ function optimizeScore(data, model) {
   let prevBestModel;
   let maxScore = getScore(data, model);
   let modelWithBestScore = model;
+  let variations = 0;
   do {
     prevMaxScore = maxScore;
     prevBestModel = modelWithBestScore;
@@ -94,6 +94,7 @@ function optimizeScore(data, model) {
         move(mod.labels[i], movements[m]);
         mod.updateCircles();
         let score = getScore(data, mod);
+        variations++;
         if (score > maxScore) {
           maxScore = score;
           modelWithBestScore = mod;
@@ -101,6 +102,7 @@ function optimizeScore(data, model) {
       }
     }
   } while(maxScore > prevMaxScore);
+  console.log(variations + ' variations have been evaluated');
   return modelWithBestScore;
 }
 
