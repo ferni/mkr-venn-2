@@ -61,7 +61,9 @@ function label(pos, members) {
 
 // Sunflower script adapted from https://stackoverflow.com/a/28572551
 function getDistributedPoints(n, alpha) {
-  const RAD = 250;
+  const canvas = document.getElementById('canvas');
+  const RAD = Math.min(canvas.width, canvas.height) / 2;
+  console.log('radius: ' + RAD);
 
   function distance(k, n, b) {
     if (k > n - b) {
@@ -76,7 +78,10 @@ function getDistributedPoints(n, alpha) {
   for (let k = 1; k <= n; k++) {
     let r = distance(k, n, b);
     let theta = 2 * Math.PI * k / Math.pow(phi, 2);
-    points.push(point((r * RAD * Math.cos(theta)) + RAD, (r * RAD * Math.sin(theta)) + RAD));
+    points.push(
+      point((r * RAD * Math.cos(theta)) + (canvas.width / 2),
+      (r * RAD * Math.sin(theta)) + (canvas.height / 2))
+    );
   }
   return points;
 }
