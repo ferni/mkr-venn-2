@@ -103,7 +103,7 @@ function getModel({ groups, members }) {
         circle.labels = this.labels.filter(label => label.groupIds.some(id => id === group.id));
         const pointsInsideCircle = circle.labels
           .map(l => l.getVertices())
-          .reduce((acc, current) => acc.concat(current));
+          .reduce((acc, current) => acc.concat(current), []);
         // assign x, y and r
         Object.assign(circle, makeCircle(pointsInsideCircle));
         circle.r += 5; // give some "padding" to the circle
