@@ -97,18 +97,43 @@ function getModel({ groups, members }) {
       });
     },
     updateCircles() {
-      this.circles = groups.map(group => {
-        const circle = Object.assign({}, group);
-        // add members that belong to the group
-        circle.labels = this.labels.filter(label => label.groupIds.some(id => id === group.id));
-        const pointsInsideCircle = circle.labels
-          .map(l => l.getVertices())
-          .reduce((acc, current) => acc.concat(current), []);
-        // assign x, y and r
-        Object.assign(circle, makeCircle(pointsInsideCircle));
-        circle.r += 5; // give some "padding" to the circle
-        return circle;
-      });
+      const pad = 5; // padding for parent circles
+      this.circles = [];
+      groups
+        .sort((a, b) => { // children first
+          if (a.parent === b.id) {
+            return -1;
+          } else if (b.parent === a.id) {
+            return 1;
+          }
+          return 0;
+        })
+        .forEach(group => {
+          const circle = Object.assign({}, group);
+          // add members that belong to the group
+          circle.labels = this.labels.filter(label => label.groupIds.some(id => id === group.id));
+
+          const pointsInsideCircle = circle.labels
+            .map(l => l.getVertices())
+            .reduce((acc, current) => acc.concat(current), []) // concat all
+            .concat(
+              // add children circles' bound points
+              this.circles
+                .filter(c => c.parent === group.id)
+                .map(c => [
+                  point(c.x - c.r - pad, c.y), point(c.x + c.r + pad, c.y),
+                  point(c.x, c.y + c.r + pad), point(c.x, c.y - c.r - pad)]
+                )
+                .reduce((acc, current) => acc.concat(current), []) // concat all
+            );
+          if (pointsInsideCircle.length === 0) {
+            return;
+          }
+          // assign x, y and r
+          Object.assign(circle, makeCircle(pointsInsideCircle));
+          circle.r += 5; // give some "padding" to the circle
+          this.circles.push(circle);
+        });
     }
   };
   let labels = [];
