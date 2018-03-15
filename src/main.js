@@ -7,17 +7,23 @@ import { draw } from './drawing';
 
 validateData(data);
 // resolve group hierarchy
-data.groups.forEach(group => {
-  if (group.parent) {
-    data.members.forEach(member => {
-      if (member.groupIds.includes(group.id) &&
-        !member.groupIds.includes(group.parent)
-      ) {
-        member.groupIds.push(group.parent);
-      }
-    })
-  }
-});
+let newAdded;
+do {
+  newAdded = false;
+  data.groups.forEach(group => {
+    if (group.parent) {
+      data.members.forEach(member => {
+        if (member.groupIds.includes(group.id) &&
+          !member.groupIds.includes(group.parent)
+        ) {
+          member.groupIds.push(group.parent);
+          newAdded = true;
+        }
+      })
+    }
+  });
+} while(newAdded);
+
 let model = getModel(data);
 console.time('Score optimization');
 model = optimizeScore(data, model);
