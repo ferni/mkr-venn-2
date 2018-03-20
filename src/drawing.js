@@ -12,7 +12,7 @@ function makeText(content){
     fillColor: 'black',
     fontFamily: 'Courier New',
     fontWeight: 'bold',
-    fontSize: 20
+    fontSize: 14
   });
 }
 
