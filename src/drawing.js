@@ -2,6 +2,8 @@ import paper from "paper";
 
 // Initialize
 const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+
 paper.setup(canvas);
 
 const cachedPaperTexts = {};
@@ -46,4 +48,14 @@ function draw(model) {
   paper.view.draw();
 }
 
-export {draw, getPaperText};
+function drawText(text) {
+  ctx.font = "20px Arial";
+  ctx.fillText(text, 30, (canvas.height / 2) - 30);
+}
+
+function clear() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+
+export {draw, getPaperText, drawText, clear};
