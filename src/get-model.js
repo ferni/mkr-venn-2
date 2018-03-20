@@ -63,7 +63,6 @@ function label(pos, members) {
 function getDistributedPoints(n, alpha) {
   const canvas = document.getElementById('canvas');
   const RAD = Math.min(canvas.width, canvas.height) / 2;
-  console.log('radius: ' + RAD);
 
   function distance(k, n, b) {
     if (k > n - b) {
