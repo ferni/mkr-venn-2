@@ -42,6 +42,7 @@ function draw(model) {
     const shape = new paper.Shape.Circle(new paper.Point(circle.x, circle.y), circle.r);
     shape.strokeColor = circle.color || 'black';
   });
+  paper.project.activeLayer.fitBounds(new paper.Rectangle(0, 0, canvas.width, canvas.height));
   paper.view.draw();
 }
 
