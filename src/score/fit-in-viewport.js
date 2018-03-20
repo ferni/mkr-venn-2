@@ -29,7 +29,7 @@ function getViewportScore(data, model) {
       bottomBound = circle.y + circle.r;
     }
     if (circle.y + circle.r < topBound) {
-      topBound = circle.y + circle.r;
+      topBound = circle.y - circle.r;
     }
   });
 
@@ -38,28 +38,28 @@ function getViewportScore(data, model) {
   const penalty = 5;
   const reward = 1;
   if (leftBound < 0) {
-    score -= penalty;
+    score -= penalty * leftBound * -1;
   } else if (leftBound < goodEnough) {
     score += reward;
   } else {
     score += reward / leftBound;
   }
   if (rightBound > canvas.width) {
-    score -= penalty;
+    score -= penalty * (rightBound - canvas.width);
   } else if (canvas.width - rightBound < goodEnough) {
     score += reward;
   } else {
     score += reward / (canvas.width - rightBound);
   }
   if (topBound < 0) {
-    score -= penalty;
+    score -= penalty * topBound * -1;
   } else if (topBound < goodEnough) {
     score += reward;
   } else {
     score += reward / topBound;
   }
   if (bottomBound > canvas.height) {
-    score -= penalty;
+    score -= penalty * (bottomBound - canvas.height);
   } else if (canvas.height - bottomBound < goodEnough) {
     score += reward;
   } else {
