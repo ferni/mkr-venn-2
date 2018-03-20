@@ -1,21 +1,22 @@
 
 function getAreasScore(data, model) {
-  // The circle's area is nice when it is idealRatio times the sum of the labels' areas
-  const idealRatio = 4;
   let score = 0;
-  model.circles.forEach(circle => {
+  const tolerance = 5; // per cent
+  const ratios = model.circles.map(circle => {
     const labelsArea = circle.labels.reduce((areaSum, label) => areaSum + label.getArea(), 0);
     const circleArea = Math.PI * Math.pow(circle.r, 2);
-    const ratio = circleArea / labelsArea;
-    let difference = idealRatio - ratio;
-    if (difference < 0) {
-      difference *= -1;
+    return circleArea / labelsArea;
+  });
+  const ratioSum = ratios.reduce((sum, ratio) => sum + ratio);
+  const avg = ratioSum / ratios.length;
+  ratios.forEach(ratio => {
+    let diff = ratio - avg;
+    if (diff < 0) {
+      diff *= -1;
     }
-    if (difference > 100) {
-      score -= 1;
-    } else {
-      // it's close, but how much?
-      score += (100 - difference) / 100;
+    const diffPercentage = diff * 100 / avg;
+    if (diffPercentage > tolerance) {
+      score -= diffPercentage;
     }
   });
   return score;
