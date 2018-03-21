@@ -88,6 +88,8 @@ function optimizeScore(data, model) {
   do {
     prevMaxScore = maxScore;
     prevBestModel = modelWithBestScore;
+    let bestMovementModel = prevBestModel;
+    let bestMovementScore = prevMaxScore;
     for (let i = model.labels.length - 1; i >= 0; i--) {
       for (let m = movements.length - 1; m >= 0; m--) {
         let mod = prevBestModel.getCopy();
@@ -95,11 +97,15 @@ function optimizeScore(data, model) {
         mod.updateCircles();
         let score = getScore(data, mod);
         variations++;
-        if (score > maxScore) {
-          maxScore = score;
-          modelWithBestScore = mod;
+        if (score > bestMovementScore) {
+          bestMovementScore = score;
+          bestMovementModel = mod;
         }
       }
+    }
+    if (bestMovementScore > maxScore) {
+      maxScore = bestMovementScore;
+      modelWithBestScore = bestMovementModel;
     }
   } while(maxScore > prevMaxScore);
   console.log(variations + ' variations have been evaluated');
